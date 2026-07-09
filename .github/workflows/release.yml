@@ -7,14 +7,11 @@ on:
 
 jobs:
   release:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -23,9 +20,56 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
-        with:
-          charts_dir: charts
+      - name: Package chart
+        run: |
+          helm package charts/gen -d .cr-release-packages
+
+      - name: Create GitHub Release
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="gen-$(helm show chart charts/gen | grep '^version:' | awk '{print $2}')"
+          if gh release view "$TAG" &>/dev/null; then
+            echo "Release $TAG already exists — skipping"
+            exit 0
+          fi
+          gh release create "$TAG" .cr-release-packages/*.tgz \
+            --title "$TAG" \
+            --generate-notes
+
+      - name: Publish to GitHub Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          REPO_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          INDEX_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}"
+          CHART_VERSION=$(helm show chart charts/gen | grep '^version:' | awk '{print $2}')
+          TAG="gen-${CHART_VERSION}"
+
+          # Prepare packages directory
+          mkdir -p pages
+          cp .cr-release-packages/*.tgz pages/
+
+          # Clone or init gh-pages branch
+          if git fetch origin gh-pages 2>/dev/null && git rev-parse origin/gh-pages &>/dev/null; then
+            git clone --branch gh-pages --single-branch "$REPO_URL" pages-repo
+            cp pages/*.tgz pages-repo/
+            cd pages-repo
+            helm repo index . --url "$INDEX_URL" --merge index.yaml 2>/dev/null || helm repo index . --url "$INDEX_URL"
+          else
+            cd pages
+            helm repo index . --url "$INDEX_URL"
+            git init
+            git checkout -b gh-pages
+            git remote add origin "$REPO_URL"
+          fi
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No index changes — nothing to commit"
+            exit 0
+          fi
+          git commit -m "Release ${TAG}"
+          git push origin gh-pages
