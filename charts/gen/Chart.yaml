@@ -4,7 +4,7 @@ description: A reusable Helm chart template for Modopod services
 
 type: application
 
-version: 0.1.1
+version: 0.1.2
 
 appVersion: ""
 
