@@ -45,18 +45,26 @@ jobs:
           AUTH_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           INDEX_URL="https://${OWNER}.github.io/${REPO}"
 
-          # Stage packages in a temp directory
+          echo "=== Debug ==="
+          echo "GH_TOKEN length: ${#GH_TOKEN}"
+          echo "AUTH_URL prefix: ${AUTH_URL:0:40}..."
+          echo "Checking if gh-pages exists on remote..."
+
+          if git ls-remote --exit-code --heads origin gh-pages &>/dev/null; then
+            echo "gh-pages exists — cloning"
             PKG_DIR="$(mktemp -d)"
             cp .cr-release-packages/*.tgz "$PKG_DIR/"
-
-          # Try to clone existing gh-pages branch
-          if git ls-remote --exit-code --heads origin gh-pages &>/dev/null; then
             cd "$PKG_DIR"
-            git clone --branch gh-pages --single-branch "$AUTH_URL" repo
+            git clone --branch gh-pages --single-branch "$AUTH_URL" repo 2>&1
+            ls -la repo/
             mv *.tgz repo/
             cd repo
+            echo "Updating Helm index..."
             helm repo index . --url "$INDEX_URL" --merge index.yaml 2>/dev/null || helm repo index . --url "$INDEX_URL"
           else
+            echo "gh-pages does NOT exist — creating"
+            PKG_DIR="$(mktemp -d)"
+            cp .cr-release-packages/*.tgz "$PKG_DIR/"
             cd "$PKG_DIR"
             helm repo index . --url "$INDEX_URL"
             git init
@@ -70,5 +78,6 @@ jobs:
             exit 0
           fi
           git commit -m "Release ${TAG}"
-          git push origin gh-pages
-          echo "Published ${TAG} to GitHub Pages"
+          echo "Pushing to gh-pages..."
+          git push origin gh-pages 2>&1
+          echo "Done!"
