@@ -1,0 +1,78 @@
+# -- Number of replicas
+replicaCount: 1
+
+# -- Container image settings
+image:
+  # -- Image repository
+  repository: nginx
+  # -- Image pull policy
+  pullPolicy: Always
+  # -- Image tag (defaults to Chart.AppVersion if empty)
+  tag: "latest"
+
+# -- Container port the app listens on
+containerPort: 80
+
+# -- Secrets for pulling images from private registries
+imagePullSecrets:
+  # - name: ghcr-secret
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+# -- Service configuration
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- Service port (external)
+  port: 80
+  # -- Target port on the container (must match containerPort)
+  targetPort: 7011
+
+# -- Ingress configuration
+ingress:
+  # -- Enable ingress
+  enabled: true
+  # -- Ingress class name
+  className: traefik
+  # -- Ingress annotations
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- Ingress host rules
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  # -- Redirect HTTP to HTTPS (adds traefik websecure entrypoint)
+  httpsRedirect: true
+  # -- TLS configuration
+  tls:
+    - secretName: example-com-tls
+      hosts:
+        - example.com
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
