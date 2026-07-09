@@ -32,42 +32,33 @@ jobs:
             --title "$TAG" \
             --generate-notes
 
-      - name: Update GitHub Pages
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Helm repo index
         run: |
           set -euo pipefail
-
-          CHART_VERSION=$(helm show chart charts/gen | grep '^version:' | awk '{print $2}')
-          TAG="gen-${CHART_VERSION}"
           OWNER="${GITHUB_REPOSITORY%/*}"
           REPO="${GITHUB_REPOSITORY#*/}"
-          AUTH_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           INDEX_URL="https://${OWNER}.github.io/${REPO}"
 
-          PKG_DIR="$(mktemp -d)"
-          cp .cr-release-packages/*.tgz "$PKG_DIR/"
+          mkdir -p pages
 
-          # Try to clone existing gh-pages; if it fails, create fresh
-          if git clone --branch gh-pages --single-branch "$AUTH_URL" "$PKG_DIR/repo" 2>/dev/null; then
-            echo "gh-pages exists — merging"
-            cd "$PKG_DIR/repo"
-            mv "$PKG_DIR"/*.tgz .
-            helm repo index . --url "$INDEX_URL" --merge index.yaml 2>/dev/null || helm repo index . --url "$INDEX_URL"
+          # Collect all .tgz files — both existing (from gh-pages) and new
+          if git clone --branch gh-pages --single-branch "https://github.com/${GITHUB_REPOSITORY}.git" pages-existing 2>/dev/null; then
+            cp pages-existing/*.tgz pages/ 2>/dev/null || true
+            rm -rf pages-existing
+          fi
+          cp .cr-release-packages/*.tgz pages/
+
+          # Build index, merging with existing if present
+          if [ -f pages/index.yaml ]; then
+            helm repo index pages/ --url "$INDEX_URL" --merge pages/index.yaml
           else
-            echo "gh-pages does not exist — creating"
-            cd "$PKG_DIR"
-            helm repo index . --url "$INDEX_URL"
-            git init
-            git checkout -b gh-pages
-            git remote add origin "$AUTH_URL"
+            helm repo index pages/ --url "$INDEX_URL"
           fi
 
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No index changes — nothing to commit"
-            exit 0
-          fi
-          git commit -m "Release ${TAG}"
-          git push origin gh-pages
-          echo "Published ${TAG} to GitHub Pages"
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pages
+          publish_branch: gh-pages
+          force_orphan: false
