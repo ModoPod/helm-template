@@ -70,6 +70,23 @@ readinessProbe:
     path: /
     port: http
 
+# -- Init containers run before the main app container.
+# Each init container image can have its own entrypoint/CMD; you can override
+# them via `command` and `args`. Pull secrets are shared at the pod level.
+initContainers: []
+# - name: init-setup
+#   image:
+#     repository: busybox
+#     tag: "1.36"
+#     pullPolicy: IfNotPresent
+#   command:
+#     - /bin/sh
+#     - -c
+#     - |
+#       echo "Running init setup..."
+#   resources: {}
+#   securityContext: {}
+
 volumes: []
 volumeMounts: []
 
