@@ -33,7 +33,7 @@ spec:
       initContainers:
         {{- range . }}
         - name: {{ .name }}
-          image: "{{ .image.repository }}:{{ .image.tag | default $.Chart.AppVersion }}"
+          image: "{{ .image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ .image.pullPolicy | default "IfNotPresent" }}
           {{- with .command }}
           command:

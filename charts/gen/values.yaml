@@ -77,7 +77,6 @@ initContainers: []
 # - name: init-setup
 #   image:
 #     repository: busybox
-#     tag: "1.36"
 #     pullPolicy: IfNotPresent
 #   command:
 #     - /bin/sh
