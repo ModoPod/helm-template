@@ -61,6 +61,11 @@ ingress:
 
 resources: {}
 
+# -- Environment variables for the main container
+env: []
+# - name: DEBUG
+#   value: "false"
+
 livenessProbe:
   httpGet:
     path: /
