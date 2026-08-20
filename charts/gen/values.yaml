@@ -94,6 +94,13 @@ initContainers: []
 volumes: []
 volumeMounts: []
 
+# -- Host aliases for the pod (adds entries to /etc/hosts)
+hostAliases: []
+# - ip: "127.0.0.1"
+#   hostnames:
+#     - "foo.local"
+#     - "bar.local"
+
 nodeSelector: {}
 tolerations: []
 affinity: {}
