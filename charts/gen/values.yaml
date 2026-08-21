@@ -28,13 +28,14 @@ podSecurityContext: {}
 securityContext: {}
 
 # -- Service configuration
-service:
-  # -- Kubernetes Service type
-  type: ClusterIP
-  # -- Service port (external)
-  port: 80
-  # -- Target port on the container (must match containerPort)
-  targetPort: 7011
+services:
+  - name: http
+    # -- Kubernetes Service type
+    type: ClusterIP
+    # -- Service port (external)
+    port: 80
+    # -- Target port on the container (must match containerPort)
+    targetPort: 7011
 
 # -- Ingress configuration
 ingress:
@@ -53,12 +54,30 @@ ingress:
           pathType: Prefix
   # -- Redirect HTTP to HTTPS (adds traefik websecure entrypoint)
   httpsRedirect: true
+  # -- Service name to route traffic to (must match a name in `services`)
+  serviceName: http
+  # -- Service port to route traffic to
+  servicePort: 80
   # -- TLS configuration
   tls:
     - secretName: example-com-tls
       hosts:
         - example.com
 
+# -- Prometheus ServiceMonitor configuration
+metrics:
+  # -- Enable ServiceMonitor CRD
+  enabled: false
+  # -- Interval to scrape metrics
+  interval: 30s
+  # -- Scrape timeout
+  scrapeTimeout: 10s
+  # -- Metric endpoint configuration
+  metric:
+    # -- Port name on the service to scrape
+    port: http
+    # -- HTTP path to scrape metrics from
+    path: /metrics
 resources: {}
 
 # -- Environment variables for the main container

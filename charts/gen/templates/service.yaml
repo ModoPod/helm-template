@@ -1,15 +1,18 @@
+{{- range .Values.services }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "gen.fullname" . }}
+  name: {{ include "gen.fullname" $ }}-{{ .name }}
   labels:
-    {{- include "gen.labels" . | nindent 4 }}
+    {{- include "gen.labels" $ | nindent 4 }}
+    app.kubernetes.io/service: {{ .name }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .type | default "ClusterIP" }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
       protocol: TCP
-      name: http
+      name: {{ .name }}
   selector:
-    {{- include "gen.selectorLabels" . | nindent 4 }}
+    {{- include "gen.selectorLabels" $ | nindent 4 }}
+{{- end }}
