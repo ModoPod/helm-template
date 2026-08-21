@@ -36,6 +36,10 @@ services:
     port: 80
     # -- Target port on the container (must match containerPort)
     targetPort: 7011
+    # -- Extra labels added to the Service (e.g. custom selectors for monitoring)
+    labels: {}
+    # -- Extra selector labels added to the Service spec.selector
+    selectorLabels: {}
 
 # -- Ingress configuration
 ingress:
