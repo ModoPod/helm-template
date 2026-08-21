@@ -2,7 +2,16 @@ apiVersion: v1
 entries:
   gen:
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.580935163Z"
+    created: "2026-08-21T16:48:12.998578642Z"
+    description: A reusable Helm chart template for Modopod services
+    digest: ad7bad8fd3b2ad60db9fd20d2b76effba4dc4aef15f9643e40f93eccb69d0068
+    name: gen
+    type: application
+    urls:
+    - https://ModoPod.github.io/helm-template/gen-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    created: "2026-08-21T16:48:12.998137728Z"
     description: A reusable Helm chart template for Modopod services
     digest: dcf2c84ea91560fef8a98893cfcfa2a61e126001162e7b54b9586396d999a751
     name: gen
@@ -11,7 +20,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.580565358Z"
+    created: "2026-08-21T16:48:12.997725027Z"
     description: A reusable Helm chart template for Modopod services
     digest: c0774c99fba9c804db759460e99618448bcf261281343a3cd18e8541487a2526
     name: gen
@@ -20,7 +29,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.580203955Z"
+    created: "2026-08-21T16:48:12.997327665Z"
     description: A reusable Helm chart template for Modopod services
     digest: 98606005327e1c1b0c40f3efc764984ee9747c220e90f3cda121e915082576ea
     name: gen
@@ -29,7 +38,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.579839078Z"
+    created: "2026-08-21T16:48:12.996932076Z"
     description: A reusable Helm chart template for Modopod services
     digest: 47c0c4d3274ddf8478c644acdba502c080a3b6ed675c2380f27f6870d2ce43c3
     name: gen
@@ -38,7 +47,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.1.6.tgz
     version: 0.1.6
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.579564536Z"
+    created: "2026-08-21T16:48:12.996635913Z"
     description: A reusable Helm chart template for Modopod services
     digest: 6deb26785fa4de8750cda05a3f52698cf82aff358c50538c1bb21ecbc85e5c84
     name: gen
@@ -47,7 +56,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.1.5.tgz
     version: 0.1.5
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.579284235Z"
+    created: "2026-08-21T16:48:12.996299825Z"
     description: A reusable Helm chart template for Modopod services
     digest: b867cbd29490f178677ea63ecaa1b12d279966ba1b9387df0484ab62e08d0b1e
     name: gen
@@ -56,7 +65,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.578972717Z"
+    created: "2026-08-21T16:48:12.995960521Z"
     description: A reusable Helm chart template for Modopod services
     digest: eb060d4e4bfe5d8426a025151cd7a5b55da67bff344fa425dc541f0d6d340b19
     name: gen
@@ -65,7 +74,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.57865475Z"
+    created: "2026-08-21T16:48:12.99563305Z"
     description: A reusable Helm chart template for Modopod services
     digest: 3f3147ff9d0291d7cf3aa581226ad5f6eef9023db8122af6dea21b0de29a16a6
     name: gen
@@ -74,7 +83,7 @@ entries:
     - https://ModoPod.github.io/helm-template/gen-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v2
-    created: "2026-08-21T16:28:26.578312065Z"
+    created: "2026-08-21T16:48:12.995275472Z"
     description: A reusable Helm chart template for Modopod services
     digest: cf39a533532d1f984be992836d0b97b6dba5857d40bfbf62e7ff1d646cb3f933
     name: gen
@@ -82,4 +91,4 @@ entries:
     urls:
     - https://ModoPod.github.io/helm-template/gen-0.1.1.tgz
     version: 0.1.1
-generated: "2026-08-21T16:28:26.577674999Z"
+generated: "2026-08-21T16:48:12.994533496Z"
