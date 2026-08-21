@@ -14,5 +14,5 @@ spec:
   selector:
     matchLabels:
       {{- include "gen.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/service: {{ .Values.metrics.metric.port }}
+      app.kubernetes.io/service: {{ .Values.metrics.service.name }}
 {{- end }}

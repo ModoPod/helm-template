@@ -1,0 +1,18 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gen.fullname" . }}-{{ .Values.metrics.service.name }}
+  labels:
+    {{- include "gen.labels" . | nindent 4 }}
+    app.kubernetes.io/service: {{ .Values.metrics.service.name }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.metrics.service.port }}
+      targetPort: {{ .Values.metrics.service.targetPort }}
+      protocol: TCP
+      name: {{ .Values.metrics.service.name }}
+  selector:
+    {{- include "gen.selectorLabels" . | nindent 4 }}
+{{- end }}

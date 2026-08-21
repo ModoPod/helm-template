@@ -79,10 +79,18 @@ metrics:
   interval: 30s
   # -- Scrape timeout
   scrapeTimeout: 10s
+  # -- Dedicated metrics Service (auto-created when enabled)
+  service:
+    # -- Name of the metrics service (also used as port name and label)
+    name: metrics
+    # -- Service port (external)
+    port: 9100
+    # -- Target port on the container
+    targetPort: 9100
   # -- Metric endpoint configuration
   metric:
     # -- Port name on the service to scrape
-    port: http
+    port: metrics
     # -- HTTP path to scrape metrics from
     path: /metrics
 resources: {}
