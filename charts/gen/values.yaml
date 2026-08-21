@@ -46,9 +46,12 @@ ingress:
   # -- Ingress annotations
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-  # -- Ingress host rules
+  # -- Base domain appended to each ingress host. Hosts in `ingress.hosts`
+  # and `ingress.tls` are treated as subdomains and rendered as `<sub>.<domain>`.
+  domain: srv.mdpd.ir
+  # -- Ingress host rules (subdomains relative to `domain`)
   hosts:
-    - host: example.com
+    - host: example
       paths:
         - path: /
           pathType: Prefix
@@ -62,7 +65,7 @@ ingress:
   tls:
     - secretName: example-com-tls
       hosts:
-        - example.com
+        - example
 
 # -- Prometheus ServiceMonitor configuration
 metrics:

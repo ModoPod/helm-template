@@ -108,6 +108,49 @@ When `metrics.enabled` is `false` (default), no ServiceMonitor is rendered.
 
 ---
 
+## 4. Configurable domain (v0.3.0)
+
+New in `v0.3.0`. The base domain is now a variable. Set `ingress.domain`
+(defaults to `srv.mdpd.ir`); hosts in `ingress.hosts[].host` and
+`ingress.tls[].hosts` are treated as **subdomains** and rendered as
+`<sub>.<domain>`.
+
+### Before (v0.2.x)
+
+```yaml
+ingress:
+  enabled: true
+  serviceName: http
+  servicePort: 80
+  hosts:
+    - host: report.srv.mdpd.ir
+  tls:
+    - secretName: report-tls
+      hosts:
+        - report.srv.mdpd.ir
+```
+
+### After (v0.3.0)
+
+```yaml
+ingress:
+  enabled: true
+  serviceName: http
+  servicePort: 80
+  domain: srv.mdpd.ir   # optional, defaults to srv.mdpd.ir
+  hosts:
+    - host: report       # subdomain only
+  tls:
+    - secretName: report-tls
+      hosts:
+        - report         # subdomain only
+```
+
+To change the domain across the cluster, update `ingress.domain` in a single
+place instead of editing every host string.
+
+---
+
 ## Rollback
 
 To roll back to `v0.1.x`, restore the old `service` block and set
