@@ -128,6 +128,29 @@ initContainers: []
 volumes: []
 volumeMounts: []
 
+# -- Persistent storage for the main container. Creates a PVC named
+# `<fullname>-<persistence.name>` (or reuses `existingClaim`) and mounts it at
+# `persistence.mountPath`.
+persistence:
+  # -- Create and mount the PersistentVolumeClaim
+  enabled: false
+  # -- Name shared by the volume, volumeMount and PVC suffix
+  name: data
+  # -- Mount path inside the main container
+  mountPath: /data
+  # -- Requested storage size
+  size: 5Gi
+  # -- Access mode for the claim
+  accessMode: ReadWriteOnce
+  # -- StorageClass name (cluster default when empty)
+  storageClass: ""
+  # -- Reuse an existing claim instead of creating one
+  existingClaim: ""
+  # -- Mount a subPath of the volume
+  subPath: ""
+  # -- Annotations for the created PVC
+  annotations: {}
+
 # -- Host aliases for the pod (adds entries to /etc/hosts)
 hostAliases: []
 # - ip: "127.0.0.1"

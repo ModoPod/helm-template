@@ -51,3 +51,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
+
+{{/*
+Name of the PersistentVolumeClaim backing `persistence`.
+Uses existingClaim when provided, otherwise <fullname>-<persistence.name>.
+*/}}
+{{- define "gen.persistenceClaimName" -}}
+{{- .Values.persistence.existingClaim | default (printf "%s-%s" (include "gen.fullname" .) .Values.persistence.name) }}
+{{- end }}

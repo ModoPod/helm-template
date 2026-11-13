@@ -151,6 +151,30 @@ place instead of editing every host string.
 
 ---
 
+## 5. Persistent storage (v0.3.3)
+
+New in `v0.3.3`. `persistence` creates a `PersistentVolumeClaim` and mounts it
+into the main container — no hand-written kustomize PVC needed.
+
+```yaml
+persistence:
+  enabled: true
+  name: data          # volume/volumeMount name, PVC suffix
+  mountPath: /app/data
+  size: 5Gi
+  accessMode: ReadWriteOnce
+  storageClass: ""     # cluster default when empty
+  existingClaim: ""    # reuse an existing claim; no PVC is created
+  subPath: ""          # mount a subdirectory of the claim
+  annotations: {}
+```
+
+The generated PVC is `<fullname>-<persistence.name>` (e.g.
+`order-collector-service-gen-data`). Values in `volumes`/`volumeMounts` keep
+working alongside it.
+
+---
+
 ## Rollback
 
 To roll back to `v0.1.x`, restore the old `service` block and set
